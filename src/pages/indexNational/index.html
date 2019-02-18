@@ -3,16 +3,251 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="./app.css"
-    />
+    <link rel="stylesheet" type="text/css" href="/css/app.css" />
     <title>Document</title>
   </head>
   <body>
     <div class="indexNational_mobile">indexNational_mobile</div>
-    <script src="./app.js"></script>
+    <div class="mui-content">
+      <div class="layer-grid-9" ms-visible="!@thumbtackState">
+        <ul class="mui-table-view mui-grid-view mui-grid-9">
+          <li
+            class="mui-table-view-cell mui-media mui-col-xs-3 js-top-li"
+            data-id="oa_document_manage"
+          >
+            <a onclick="openPage(1);">
+              <span class="ionc-not-dispathced"></span>
+              <div class="mui-media-body">公文流转</div>
+            </a>
+          </li>
+          <li
+            class="mui-table-view-cell mui-media mui-col-xs-3 js-top-li"
+            data-id="meetingManager"
+          >
+            <a onclick="openPage(2);">
+              <span class="meeting-approval"></span>
+              <div class="mui-media-body">会议管理</div>
+            </a>
+          </li>
+          <li
+            class="mui-table-view-cell mui-media mui-col-xs-3 js-top-li"
+            data-id="leader_instruction"
+          >
+            <a onclick="openPage(3);">
+              <span class="leader-instructions"></span>
+              <div class="mui-media-body">领导批示</div>
+            </a>
+          </li>
+          <li
+            class="mui-table-view-cell mui-media mui-col-xs-3 js-top-li"
+            data-id="oa_sptrain_message"
+          >
+            <a onclick="openPage(4);">
+              <span class="special-affairs"></span>
+              <div class="mui-media-body">专项事务</div>
+            </a>
+          </li>
+          <li
+            class="mui-table-view-cell mui-media mui-col-xs-3"
+            data-id="notice_manage"
+          >
+            <a onclick="openPage(0);">
+              <span class="ionc-notice"></span>
+              <div class="mui-media-body">通知公告</div>
+            </a>
+          </li>
+          <li
+            class="mui-table-view-cell mui-media mui-col-xs-3"
+            data-id="coremail_manage"
+          >
+            <a onclick="openCoremail();">
+              <span class="ionc-mail"></span>
+              <div class="mui-media-body">邮件</div>
+            </a>
+          </li>
+          <li class="mui-table-view-cell mui-media mui-col-xs-3">
+            <a onclick="openAppMarket()">
+              <span class="document-library"></span>
+              <div class="mui-media-body">公文库</div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="layer-to-dealt"
+        ms-on-swipeleft="@swipeleft"
+        ms-on-swiperight="@swiperight"
+      >
+        <div class="mui-row daibanyue" ms-class="{'fixed':@thumbtackState}">
+          <div class="mui-col-xs-4">
+            <div
+              class="js-middle-num"
+              ms-class="{'on':@curIndex == 0}"
+              data-index="0"
+            >
+              待办
+            </div>
+          </div>
+          <div class="mui-col-xs-4">
+            <div
+              class="toread js-middle-num"
+              ms-class="{'on':@curIndex == 1}"
+              data-index="1"
+            >
+              待阅
+            </div>
+          </div>
+          <div class="mui-col-xs-4">
+            <div
+              class="chaosong js-middle-num"
+              ms-class="{'on':@curIndex == 2}"
+              data-index="2"
+            >
+              抄送
+            </div>
+            <span ms-class="{'thumbtack':@thumbtackState == 1}"></span>
+          </div>
+        </div>
+        <div ms-visible="@curIndex == 0">
+          <ul
+            class="mui-table-view mui-table-view-striped mui-table-view-condensed daiban"
+            ms-class="{'fixed-top':@thumbtackState}"
+          >
+            <li
+              class="mui-table-view-cell "
+              ms-for="(index,el) in @toDoData"
+              ms-attr="{'data-id':el.id,'data-wfname':el.wfname}"
+            >
+              <div class="number" ms-css="{'color':el.isRed}">
+                {{ index + 1 }}.
+              </div>
+              <div ms-if="el.isLamp" class="special" ms-class="el.isLamp"></div>
+              <div
+                ms-if="el.isTimeLimit"
+                class="special"
+                ms-class="el.isTimeLimit"
+              ></div>
+              <div class="title" ms-css="{'color':el.isRed}">
+                {{ el.title }}
+              </div>
+              <div class="type">
+                类型：<font ms-css="{'color':el.typeClass}">{{ el.type }}</font>
+              </div>
+              <div class="assign-user">
+                交办人：<font ms-css="{'color':el.typeClass}">{{
+                  el.upperUser
+                }}</font>
+              </div>
+              <div
+                class="time"
+                ms-css="{'color':el.typeClass}"
+                ms-text='el.time | date("yyyy-MM-dd")'
+              ></div>
+            </li>
+          </ul>
+          <div class="mui-pull-bottom-pocket mui-block">
+            <div class="mui-pull" ms-visible="@toDoTipShow">
+              <div
+                class="mui-pull-loading mui-icon mui-spinner"
+                ms-class="{'mui-visibility':@toDoLoadShow}"
+              ></div>
+              <div
+                class="mui-pull-caption mui-pull-caption-refresh"
+                ms-text="@toDoTip"
+              ></div>
+            </div>
+          </div>
+          <div class="no-dai-ban-data" ms-visible="@isExist(@toDoData)"></div>
+        </div>
+
+        <div ms-visible="@curIndex == 1">
+          <ul
+            class="mui-table-view mui-table-view-striped mui-table-view-condensed daiyue"
+            ms-class="{'fixed-top':@thumbtackState}"
+          >
+            <li
+              class="mui-table-view-cell "
+              ms-for="(index,el) in @toReadData"
+              ms-attr="{'data-id':el.id,'data-wfname':el.wfname,'data-showurl':el.showurl}"
+            >
+              <div class="number">{{ index + 1 }}.</div>
+              <div class="title">{{ el.title }}</div>
+              <div class="type">
+                类型：<font ms-css="{'color':el.typeClass}">{{ el.type }}</font>
+              </div>
+              <div class="assign-user">
+                交办人：<font ms-css="{'color':el.typeClass}">{{
+                  el.upperUser
+                }}</font>
+              </div>
+              <div
+                class="time"
+                ms-css="{'color':el.typeClass}"
+                ms-text='el.time | date("yyyy-MM-dd")'
+              ></div>
+            </li>
+          </ul>
+          <div class="mui-pull-bottom-pocket mui-block">
+            <div class="mui-pull" ms-visible="@toReadTipShow">
+              <div
+                class="mui-pull-loading mui-icon mui-spinner"
+                ms-class="{'mui-visibility':@toReadLoadShow}"
+              ></div>
+              <div
+                class="mui-pull-caption mui-pull-caption-refresh"
+                ms-text="@toReadTip"
+              ></div>
+            </div>
+          </div>
+          <div class="no-dai-yue-data" ms-visible="@isExist(@toReadData)"></div>
+        </div>
+
+        <!-- 抄送 -->
+        <div ms-visible="@curIndex == 2">
+          <ul
+            class="mui-table-view mui-table-view-striped mui-table-view-condensed chaoSong"
+            ms-class="{'fixed-top':@thumbtackState}"
+          >
+            <li
+              class="mui-table-view-cell "
+              ms-for="(index,el) in @copySendList"
+              ms-attr="{'data-id':el.id,'data-wfname':el.wfname,'data-showurl':el.showurl}"
+            >
+              <div class="number">{{ index + 1 }}.</div>
+              <div class="title" ms-html="el.title"></div>
+              <div class="type">
+                <font ms-css="{'color':'#48a5f5'}">{{ el.draft_dept }}</font>
+              </div>
+              <div class="assign-user">
+                <font ms-css="{'color':'#48a5f5'}">{{ el.document_no }}</font>
+              </div>
+              <div
+                class="time"
+                ms-css="{'color':'#48a5f5'}"
+                ms-text='el.send_date | date("yyyy-MM-dd")'
+              ></div>
+            </li>
+          </ul>
+          <div class="mui-pull-bottom-pocket mui-block">
+            <div class="mui-pull" ms-visible="@chaoSongTipShow">
+              <div
+                class="mui-pull-loading mui-icon mui-spinner"
+                ms-class="{'mui-visibility':@chaoSongLoadShow}"
+              ></div>
+              <div
+                class="mui-pull-caption mui-pull-caption-refresh"
+                ms-text="@chaoSongTip"
+              ></div>
+            </div>
+          </div>
+          <div
+            class="no-chao-song-data"
+            ms-visible="@isExist(@copySendList)"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/app.js"></script>
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
   </body>
 </html>
